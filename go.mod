@@ -1,4 +1,4 @@
-module google-api-client-v2
+module github.com/enrico-laboratory/google-api-client-v2
 
 go 1.18
 
