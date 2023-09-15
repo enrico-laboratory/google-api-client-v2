@@ -51,9 +51,18 @@ func (s *Spreadsheets) GetSpreadsheetSheetsList(spreadsheetId string) ([]string,
 	return sheetList, nil
 }
 
-func (s *Spreadsheets) GetSpreadsheetValues(spreadsheetId string, cells ...string) ([][]interface{}, error) {
+// GetSpreadsheetValuesFormatted gets a range of values from a specific sheet. Use this format "Sheet!A1:H9"
+func (s *Spreadsheets) GetSpreadsheetValuesFormatted(spreadsheetId string, valuesRange ...string) ([][]interface{}, error) {
+	return s.getSpreadsheetValues(spreadsheetId, "FORMATTED_VALUE", valuesRange...)
+}
 
-	resp, err := s.spreadsheet.Spreadsheets.Values.BatchGet(spreadsheetId).Ranges(cells...).Do()
+// GetSpreadsheetValuesUnFormatted gets a range of values from a specific sheet. Use this format "Sheet!A1:H9"
+func (s *Spreadsheets) GetSpreadsheetValuesUnFormatted(spreadsheetId string, valuesRange ...string) ([][]interface{}, error) {
+	return s.getSpreadsheetValues(spreadsheetId, "UNFORMATTED_VALUE", valuesRange...)
+}
+func (s *Spreadsheets) getSpreadsheetValues(spreadsheetId, valueRenderOptions string, valuesRange ...string) ([][]interface{}, error) {
+
+	resp, err := s.spreadsheet.Spreadsheets.Values.BatchGet(spreadsheetId).Ranges(valuesRange...).ValueRenderOption(valueRenderOptions).Do()
 	if err != nil {
 		return nil, err
 	}

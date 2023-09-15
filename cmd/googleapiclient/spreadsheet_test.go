@@ -83,10 +83,53 @@ func TestSpreadsheetAPI_GetSpreadsheetValues(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	type expected struct {
+		cellsRange   []string
+		expectedRows int
+	}
+
+	expectedList := []expected{
+		{
+			cellsRange:   []string{"'Sheet 2'!A1:D2", "A5:D5"},
+			expectedRows: 3,
+		},
+		{
+			cellsRange:   []string{"'Sheet 2'!A1:D2"},
+			expectedRows: 2,
+		},
+	}
+
+	for _, e := range expectedList {
+
+		t.Run("get spreadsheet values", func(t *testing.T) {
+			values, err := c.GetSpreadsheetValuesFormatted(ssId, e.cellsRange...)
+			if err != nil {
+				t.Fatal(err)
+			}
+			//for _, v := range values {
+			//	log.Println(v)
+			//}
+			assert.Equal(t, e.expectedRows, len(values))
+		})
+	}
+
 	t.Run("get spreadsheet values", func(t *testing.T) {
 		cellsRange := []string{"'Sheet 2'!A1:D2", "A5:D5"}
 
-		values, err := c.GetSpreadsheetValues(ssId, cellsRange...)
+		values, err := c.GetSpreadsheetValuesFormatted(ssId, cellsRange...)
+		if err != nil {
+			t.Fatal(err)
+		}
+		//for _, v := range values {
+		//	log.Println(v)
+		//}
+		assert.Equal(t, 3, len(values))
+	})
+
+	t.Run("get spreadsheet values", func(t *testing.T) {
+		cellsRange := []string{"'Sheet 2'!A1:D2", "A5:D5"}
+
+		values, err := c.GetSpreadsheetValuesFormatted(ssId, cellsRange...)
 		if err != nil {
 			t.Fatal(err)
 		}
