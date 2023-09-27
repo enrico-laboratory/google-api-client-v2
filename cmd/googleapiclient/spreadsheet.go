@@ -60,6 +60,9 @@ func (s *Spreadsheets) GetSpreadsheetValuesFormatted(spreadsheetId string, value
 func (s *Spreadsheets) GetSpreadsheetValuesUnFormatted(spreadsheetId string, valuesRange ...string) ([][]interface{}, error) {
 	return s.getSpreadsheetValues(spreadsheetId, "UNFORMATTED_VALUE", valuesRange...)
 }
+func (s *Spreadsheets) GetSpreadsheetValuesFormula(spreadsheetId string, valuesRange ...string) ([][]interface{}, error) {
+	return s.getSpreadsheetValues(spreadsheetId, "FORMULA", valuesRange...)
+}
 func (s *Spreadsheets) getSpreadsheetValues(spreadsheetId, valueRenderOptions string, valuesRange ...string) ([][]interface{}, error) {
 
 	resp, err := s.spreadsheet.Spreadsheets.Values.BatchGet(spreadsheetId).Ranges(valuesRange...).ValueRenderOption(valueRenderOptions).Do()
